@@ -11,6 +11,6 @@ export class AppComponent {
   constructor(private firebaseService:FirebaseServiceService){}
 
   ngOnInit():void {
-    this.firebaseService.test();
+    
   }
 }

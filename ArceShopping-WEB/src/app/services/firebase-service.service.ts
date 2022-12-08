@@ -8,7 +8,7 @@ import {
 from '@angular/fire/auth';
 
 import {query, collection, where, 
-        getDocs, doc,Firestore, updateDoc} 
+        getDocs, doc, Firestore, setDoc, updateDoc} 
 from '@angular/fire/firestore';
 
 @Injectable({
@@ -17,13 +17,12 @@ from '@angular/fire/firestore';
 export class FirebaseServiceService {
   constructor(private auth: Auth, private firestore: Firestore) {}
 
-  public async test(){
-    //5GMSOifzfnMFO3yjYXb1 
-    const alertRef = doc(this.firestore, 'Users', '5GMSOifzfnMFO3yjYXb1');
-    console.log("Creado");
-    await updateDoc(alertRef, {
-      resultado: 'Conexión funciona'
-    });
-    console.log("Actualizado"); 
-  }
+  public saveNewUser(){}
+  public updateUserDetails(){}
+  public getUser(){}
+
+  public resetPassword(){}
+  public sendTemporaryPassword(){}
+  public login(){}
+  public logout(){}  
 }
