@@ -1,0 +1,24 @@
+#catalogue{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items:center;
+    row-gap: 5vw;
+    justify-content:center;
+}
+
+.productContainer{
+    flex-grow: 1;
+    flex-shrink: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+
+
+img, p{
+    flex-grow: 1;
+}

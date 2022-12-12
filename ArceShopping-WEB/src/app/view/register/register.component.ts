@@ -27,8 +27,7 @@ export class RegisterComponent implements OnInit {
     console.log(`I received this:${newUserForm.valid}`);
     if(newUserForm.valid){
       await this.firebaseService.saveNewUser(this.user);
-      await this.firebaseService.sendTemporaryPassword(this.user.email);
-      
+      await this.firebaseService.sendTemporaryPassword(this.user.email);      
     }
   }
 

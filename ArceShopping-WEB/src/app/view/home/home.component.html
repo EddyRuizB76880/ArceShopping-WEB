@@ -1,0 +1,10 @@
+<main>
+
+    <div *ngIf="catalogueLoaded" id="catalogue">    
+        <div *ngFor="let product of catalogue" class="productContainer">
+            <img src= "{{product.thumbnail}}"/>
+            <a [routerLink]="['/product',product.id]">"{{product.title}}"</a>
+        </div>
+    </div>
+
+</main>

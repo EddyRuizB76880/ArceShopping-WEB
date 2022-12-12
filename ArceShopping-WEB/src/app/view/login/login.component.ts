@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
     switch(code[0]){
       case '0':
         this.toast.success(message, 'Exito!');
-        //redirect to home
+        this.router.navigateByUrl('home',{replaceUrl:true});
         break;
       case '1':
         this.toast.warning(message, 'Atencion');
