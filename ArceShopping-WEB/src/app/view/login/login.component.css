@@ -4,13 +4,9 @@ main{
     align-items: center;
     justify-content: space-around;
     align-content: space-between;
-    font-family: sans-serif;
     margin-top: 6vw;
 }
 
-main, input, button{
-    font-size: 1.2vw;
-}
 
 fieldset{
     border: none;

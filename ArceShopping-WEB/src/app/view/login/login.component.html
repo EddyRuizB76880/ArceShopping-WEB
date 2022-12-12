@@ -1,0 +1,38 @@
+<main  id = "main_content">
+  <h1 class = "title"> Arce Shopping</h1>
+    <form #loginForm = "ngForm" (ngSubmit)="onSubmit(loginForm)">
+    <div id="login">
+      <fieldset>
+        <label for="email_field"> Correo electrónico</label>
+        <input type="text" [(ngModel)]="userEmail" required name ="email_field">
+      </fieldset>
+  
+      <fieldset>
+        <label for="password_field"> Contraseña</label>
+        <input required [(ngModel)]="introducedPassword" type="password" name ="password_field">
+      </fieldset>
+    </div>
+  
+    <button type="submit" > Iniciar Sesión </button>
+  </form>  
+      <ul id= "register">
+        <li>  
+          <p>No tienes cuenta?</p>
+        </li>
+        <li>
+          <a href="register">Registrate</a>
+        </li>
+      </ul>
+      
+      <ul id= "forgot_password">
+        <li>
+          <p>Olvidaste tu contraseña?</p>
+        </li>
+        <li>
+          <a href="">Crea una nueva</a>
+        </li>
+      </ul>
+   
+  </main>
+  
+  

@@ -1,8 +1,8 @@
 export const environment = {
   production: false,
 
-  firebaseConfig : {
-    apiKey: "KEY",
+  firebase: {
+    apiKey: "AIzaSyDdyheLyW2emqSW77euN8djbh0msYdBySg",
     authDomain: "arceshopping-web.firebaseapp.com",
     projectId: "arceshopping-web",
     storageBucket: "arceshopping-web.appspot.com",

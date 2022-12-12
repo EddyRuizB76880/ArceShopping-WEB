@@ -1,0 +1,44 @@
+<main>
+    <h1>Registro</h1>
+{{user|json}}
+    <form #newUserForm="ngForm" (ngSubmit)="onSubmit(newUserForm)">
+
+        <fieldset>
+            <label for="name"></label>
+            <input id="userName"type="text" [(ngModel)]="user.name" name="name" 
+            required placeholder="Nombre Completo"/>
+            
+        </fieldset>
+
+        <fieldset>
+            <label for="userId"></label>
+            <input id="userId" type="number" [(ngModel)]="user.id" name="id" 
+            required placeholder="Número de identificación"/>
+        </fieldset>
+
+        <fieldset>
+            <label for="email"></label>
+            <input id="email" type="email" [(ngModel)]="user.email" name="email" 
+            required placeholder="Correo electrónico"/>
+        </fieldset>
+
+        <fieldset>
+            <label for="age"></label>
+            <input id="age" type="number" [(ngModel)]="user.age" name="age" 
+            required placeholder = "Edad"/>
+        </fieldset>
+
+        <fieldset>
+            <label for="province"></label>
+            <input id="province" type="text" [(ngModel)]="user.location" name="province" 
+            required placeholder="Provincia"/>
+            
+        </fieldset>
+
+        
+
+        <button id="submitButton" type="submit">Registrarme</button>
+    </form>
+    
+    
+</main>
