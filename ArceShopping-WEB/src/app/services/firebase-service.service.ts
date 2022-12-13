@@ -12,6 +12,7 @@ from '@angular/fire/auth';
 import {query, collection, where, 
         getDocs, doc, Firestore, addDoc, updateDoc} 
 from '@angular/fire/firestore';
+import { Product } from '../model/product.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class FirebaseServiceService {
   }
 
   public async saveNewUser(newUser:User){
-    //NOTE: the password "holis" must be changed to a randomly generated string
+    //ToDo: the password "holis" must be changed to a randomly generated string
     await createUserWithEmailAndPassword(this.auth, newUser.email, "holppoois")
     .then(()=>{
       addDoc(collection(this.firestore,'Users'),
@@ -66,5 +67,21 @@ export class FirebaseServiceService {
     
   }
 
-  public logout(){}  
+  public logout(){
+    signOut(this.auth);
+  }  
+
+  public async insertToShoppingCart(product:Product, requestedQuantity:number){
+    await addDoc(collection(this.firestore,'Shopping_cart'),
+    { 
+      ownerEmail: this.auth.currentUser?.email, 
+      productId: product.id, 
+      quantity: requestedQuantity,
+      price: requestedQuantity*product.price,
+    }).then(()=>{
+        this.emitter.emit("0:Producto añadido exitosamente");
+    }).catch((error)=>{
+        this.emitter.emit("1:Ocurrió un error");
+    });
+  }
 }
