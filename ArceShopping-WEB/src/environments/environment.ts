@@ -8,7 +8,7 @@ export const environment = {
     projectId: 'arceshopping-web',
     appId: '1:1036517345569:web:c8b3f338ec47fa98a75660',
     storageBucket: 'arceshopping-web.appspot.com',
-    apiKey: 'AIzaSyDdyheLyW2emqSW77euN8djbh0msYdBySg',
+    apiKey: '',
     authDomain: 'arceshopping-web.firebaseapp.com',
     messagingSenderId: '1036517345569',
     measurementId: 'G-1P3G9YQ292',
