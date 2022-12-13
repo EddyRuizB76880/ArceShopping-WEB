@@ -7,6 +7,7 @@ import { RegisterComponent } from './view/register/register.component';
 import { LoginComponent } from './view/login/login.component';
 import { HomeComponent } from './view/home/home.component';
 import { ProductComponent } from './view/product/product.component';
+import { ProfileComponent } from './view/profile/profile.component'
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['']);
 const redirectLoggedInToHome = () => redirectLoggedInTo(['home']);
@@ -29,6 +30,11 @@ const routes: Routes = [
   {
     path:'product/:id',
     component: ProductComponent,
+    ...canActivate(redirectUnauthorizedToLogin), 
+  },
+  {
+    path:'profile',
+    component: ProfileComponent,
     ...canActivate(redirectUnauthorizedToLogin), 
   }
 ];

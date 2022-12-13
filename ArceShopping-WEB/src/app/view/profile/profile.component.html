@@ -1,0 +1,43 @@
+<app-header></app-header>
+<main class= "main-content">
+
+    <h1>Mi perfil</h1>
+    <img id="profile_pic"/>
+    
+    <form #userInfo="ngForm" (ngSubmit)="onSubmit(userInfo)">
+        <fieldset>
+            <label for="userFullName">Nombre completo</label>
+            <input id="userFullName"type="text" [(ngModel)]="user.name" name="userFullName" 
+            required value="{{user.name}}"/>
+        </fieldset>
+
+
+        <fieldset>
+            <label for="email">Correo electrónico</label>
+            <input id="name"type="text" [(ngModel)]="user.email" name="userEmail" 
+            disabled required placeholder="{{user.email}}"/>
+        </fieldset>
+
+
+        <fieldset>
+            <label for="userId">Identificación</label>
+            <input id="userId" type="number" [(ngModel)]="user.id" name="userId" 
+            disabled required placeholder="{{user.id}}"/>
+        </fieldset>
+
+        <fieldset>
+            <label for="age">Edad</label>
+            <input id="age"type="number" [(ngModel)]="user.age" name="age" 
+            required placeholder="{{user.age}}"/>
+        </fieldset>
+        
+        <fieldset>
+            <label for="location">Ubicación</label>
+            <input id="location"type="text" [(ngModel)]="user.location" name="userLocation" 
+            required placeholder="{{user.location}}"/>
+        </fieldset>
+
+        <button type="submit">Guardar cambios</button>
+    </form>
+
+</main>

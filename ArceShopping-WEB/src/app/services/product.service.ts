@@ -16,6 +16,7 @@ export class ProductService {
     .then(res => res.json())
     .then(data=> this.products = data as Products);
     this.initialized = true;
+    
    // this.products.products.forEach((element)=>{console.log(element)});
   }
 

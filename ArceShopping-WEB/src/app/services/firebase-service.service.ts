@@ -1,4 +1,4 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import {EventEmitter, Injectable, Query} from '@angular/core';
 import { User } from '../model/user.model';
 
 import {
@@ -13,6 +13,7 @@ import {query, collection, where,
         getDocs, doc, Firestore, addDoc, updateDoc} 
 from '@angular/fire/firestore';
 import { Product } from '../model/product.model';
+import { getDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -41,7 +42,22 @@ export class FirebaseServiceService {
   }
 
   public updateUserDetails(){}
-  public getUser(){}
+  
+  public async getUser(){
+    const userEmail=this.auth.currentUser?.email;
+
+    const userQuery = query(collection(this.firestore,'Users'),
+                      where('email','==', userEmail));
+
+    await getDocs(userQuery).then((userDoc)=>{
+      if(!userDoc.empty){
+        const user = userDoc.docs[0].data() as User;
+        //const userJsonString = user.toJsonString(); throws error user.toJsonString is not a function
+        this.emitter.emit(`0;${userDoc.docs[0].id};${JSON.stringify(user)}`);
+      }
+    })
+    
+  }
 
   public sendTemporaryPassword(email:string){
     sendPasswordResetEmail(this.auth, email)
@@ -67,8 +83,8 @@ export class FirebaseServiceService {
     
   }
 
-  public logout(){
-    signOut(this.auth);
+  public async logout(){
+    await signOut(this.auth);
   }  
 
   public async insertToShoppingCart(product:Product, requestedQuantity:number){
