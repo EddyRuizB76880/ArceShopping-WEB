@@ -41,7 +41,16 @@ export class FirebaseServiceService {
     
   }
 
-  public updateUserDetails(){}
+  public updateUserDetails(user:User, userDocId:any, newPictureString:string){
+    const userDocReference = doc(this.firestore,'Users' , userDocId)
+    updateDoc(userDocReference,
+      {
+        name:user.name, id:user.id, email:user.email,
+        age: user.age, province:user.location, pic:newPictureString
+      }).then(()=>{
+      this.emitter.emit('1;Cambios guardados');
+    }); 
+  }
   
   public async getUser(){
     const userEmail=this.auth.currentUser?.email;

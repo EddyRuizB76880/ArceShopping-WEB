@@ -2,8 +2,8 @@
 <main class= "main-content">
 
     <h1>Mi perfil</h1>
-    <img id="profile_pic"/>
-    
+    <img id="profilePic" src="assets/img/user_default_icon.png"/>
+    <button id="setProfilePicButton">Elegir foto</button>
     <form #userInfo="ngForm" (ngSubmit)="onSubmit(userInfo)">
         <fieldset>
             <label for="userFullName">Nombre completo</label>
