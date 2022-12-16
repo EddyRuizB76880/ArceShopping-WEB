@@ -15,6 +15,10 @@ import { HomeComponent } from './view/home/home.component';
 import { ProductComponent } from './view/product/product.component';
 import { HeaderComponent } from './view/header/header.component';
 import { ProfileComponent } from './view/profile/profile.component';
+import { CheckoutComponent } from './view/checkout/checkout.component';
+import { AboutusComponent } from './view/aboutus/aboutus.component';
+import { HistoryComponent } from './view/history/history.component';
+import { PurchaseComponent } from './view/purchase/purchase.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +28,11 @@ import { ProfileComponent } from './view/profile/profile.component';
     HomeComponent,
     ProductComponent,
     HeaderComponent,
-    ProfileComponent
+    ProfileComponent,
+    CheckoutComponent,
+    AboutusComponent,
+    HistoryComponent,
+    PurchaseComponent
   ],
   imports: [
     BrowserModule,

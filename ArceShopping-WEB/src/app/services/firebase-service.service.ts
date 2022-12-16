@@ -24,6 +24,7 @@ import {
 import { Product } from '../model/product.model';
 import { User } from '../model/user.model';
 import { getDownloadURL } from 'firebase/storage';
+import { ShoppingCartRow } from '../model/shoppingCartRow.model';
 
 
 @Injectable({
@@ -32,9 +33,11 @@ import { getDownloadURL } from 'firebase/storage';
 
 export class FirebaseServiceService {
   public emitter:EventEmitter<string>;
+  private userEmail: string;
 
   constructor(private auth: Auth, private firestore: Firestore) {
     this.emitter = new EventEmitter<string>();
+    this.userEmail = this.auth.currentUser?.email as string;
   }
 
   public async saveNewUser(newUser:User){
@@ -66,10 +69,8 @@ export class FirebaseServiceService {
   }
   
   public async getUser(){
-    const userEmail=this.auth.currentUser?.email;
-
     const userQuery = query(collection(this.firestore,'Users'),
-                      where('email','==', userEmail));
+                      where('email','==', this.userEmail));
 
     await getDocs(userQuery).then((userDoc)=>{
       if(!userDoc.empty){
@@ -78,7 +79,24 @@ export class FirebaseServiceService {
         this.emitter.emit(`0;${userDoc.docs[0].id};${JSON.stringify(user)}`);
       }
     })
+  }
+
+  public async getUserShoppingCart(){
     
+    const shoppingCartQuery = query(collection(this.firestore,'Shopping_cart'),
+                              where('ownerEmail','==', this.userEmail));
+    const shoppingCartItems = await getDocs(shoppingCartQuery);
+    let shoppingCart: ShoppingCartRow[] = []
+
+    if(!shoppingCartItems.empty){
+    
+      shoppingCartItems.docs.forEach((doc)=>{
+          const shoppingCartItem = doc.data() as ShoppingCartRow;
+          shoppingCart.push(shoppingCartItem);
+      });
+    }
+   
+    this.emitter.emit(`0;${JSON.stringify(shoppingCart)}`);
   }
 
   public sendTemporaryPassword(email:string){
@@ -129,8 +147,7 @@ export class FirebaseServiceService {
     //A CORS error jumps if fetch tries to retrieve an url. TODO: Fix that.
     let blob:Blob = await fetch(imageBlob).then(response => response.blob());
     const firebaseStorage = getStorage();
-    const userEmail: string = this.auth.currentUser?.email as string;
-    const imageRef = ref(firebaseStorage, userEmail);
+    const imageRef = ref(firebaseStorage, this.userEmail);
 
     await uploadBytes(imageRef, blob);
     const pathToImage = getDownloadURL(imageRef);

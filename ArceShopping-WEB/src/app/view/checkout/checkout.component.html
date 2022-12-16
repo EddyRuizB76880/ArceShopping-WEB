@@ -1,0 +1,16 @@
+<main class="main-content">
+    <h1>Mi carrito de compras</h1>
+
+    <ul>
+        <li *ngFor="let shoppingCartItem of shoppingCart">
+            <img src = "{{products[shoppingCartItem.productId -1].thumbnail}}"/>
+            <p>{{products[shoppingCartItem.productId].description}}</p>
+            <input max="10" min="1" type="number" value="{{shoppingCartItem.quantity}}"/>
+            <p>{{shoppingCartItem.price}}</p>
+            <button>Quitar del carrito</button>
+        </li>
+    </ul>
+
+    <button>Confirmar mi compra</button>
+    <button>Vaciar carrito</button>
+</main>

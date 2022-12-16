@@ -8,6 +8,10 @@ import { LoginComponent } from './view/login/login.component';
 import { HomeComponent } from './view/home/home.component';
 import { ProductComponent } from './view/product/product.component';
 import { ProfileComponent } from './view/profile/profile.component'
+import { PurchaseComponent } from './view/purchase/purchase.component';
+import { AboutusComponent } from './view/aboutus/aboutus.component';
+import { HistoryComponent } from './view/history/history.component';
+import { CheckoutComponent } from './view/checkout/checkout.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['']);
 const redirectLoggedInToHome = () => redirectLoggedInTo(['home']);
@@ -36,7 +40,28 @@ const routes: Routes = [
     path:'profile',
     component: ProfileComponent,
     ...canActivate(redirectUnauthorizedToLogin), 
-  }
+  },
+  {
+    path:'purchase/:id',
+    component: PurchaseComponent,
+    ...canActivate(redirectUnauthorizedToLogin), 
+  },
+  {
+    path:'aboutus',
+    component: AboutusComponent,
+    ...canActivate(redirectUnauthorizedToLogin), 
+  },
+  {
+    path:'history',
+    component: HistoryComponent,
+    ...canActivate(redirectUnauthorizedToLogin), 
+  },
+  {
+    path:'checkout',
+    component: CheckoutComponent,
+    ...canActivate(redirectUnauthorizedToLogin), 
+  },
+
 ];
 
 @NgModule({

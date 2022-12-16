@@ -1,0 +1,16 @@
+ul{
+    display: flex;
+    flex-direction: column;
+}
+
+li{
+    display: flex;
+    flex-direction: row;
+}
+
+img
+{
+    width: 10%;
+    height: 10%;
+}
+

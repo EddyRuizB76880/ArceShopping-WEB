@@ -15,13 +15,13 @@ export class HomeComponent implements OnInit {
     //When returning to this page, displayProducts() needs to be executed again
     //or else, the page will be blank(probably because of the ngIf on the HTML).
     if(!this.productsService.isReady()){
-      this.bootProductsService();
+      this.getProducts();
     }else{
       this.displayProducts()
     }
   }
 
-  async bootProductsService(){
+  async getProducts(){
     await this.productsService.start();
     this.displayProducts();
   }
