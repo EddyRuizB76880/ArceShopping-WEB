@@ -1,19 +1,30 @@
 import {EventEmitter, Injectable, Query} from '@angular/core';
-import { User } from '../model/user.model';
 
+import { getStorage, ref, uploadBytes } from '@angular/fire/storage'
 import {
-  Auth, updatePassword,
+  Auth, 
+  updatePassword,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signOut} 
-from '@angular/fire/auth';
+  signOut
+} from '@angular/fire/auth';
 
-import {query, collection, where, 
-        getDocs, doc, Firestore, addDoc, updateDoc} 
-from '@angular/fire/firestore';
+import {
+  query, 
+  collection, 
+  where, 
+  getDocs, 
+  doc, 
+  Firestore, 
+  addDoc, 
+  updateDoc
+} from '@angular/fire/firestore';
+
 import { Product } from '../model/product.model';
-import { getDoc } from 'firebase/firestore';
+import { User } from '../model/user.model';
+import { getDownloadURL } from 'firebase/storage';
+
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +32,7 @@ import { getDoc } from 'firebase/firestore';
 
 export class FirebaseServiceService {
   public emitter:EventEmitter<string>;
+
   constructor(private auth: Auth, private firestore: Firestore) {
     this.emitter = new EventEmitter<string>();
   }
@@ -41,12 +53,13 @@ export class FirebaseServiceService {
     
   }
 
-  public updateUserDetails(user:User, userDocId:any, newPictureString:string){
+  public async updateUserDetails(user:User, userDocId:any, newPictureString:string){
     const userDocReference = doc(this.firestore,'Users' , userDocId)
+    const url = await this.saveImageInStorage(newPictureString);
     updateDoc(userDocReference,
       {
         name:user.name, id:user.id, email:user.email,
-        age: user.age, province:user.location, pic:newPictureString
+        age: user.age, province:user.location, picture:url
       }).then(()=>{
       this.emitter.emit('1;Cambios guardados');
     }); 
@@ -108,5 +121,19 @@ export class FirebaseServiceService {
     }).catch((error)=>{
         this.emitter.emit("1:Ocurrió un error");
     });
+
+  
+  }
+
+  public async saveImageInStorage(imageBlob: string){
+    //A CORS error jumps if fetch tries to retrieve an url. TODO: Fix that.
+    let blob:Blob = await fetch(imageBlob).then(response => response.blob());
+    const firebaseStorage = getStorage();
+    const userEmail: string = this.auth.currentUser?.email as string;
+    const imageRef = ref(firebaseStorage, userEmail);
+
+    await uploadBytes(imageRef, blob);
+    const pathToImage = getDownloadURL(imageRef);
+    return pathToImage;
   }
 }

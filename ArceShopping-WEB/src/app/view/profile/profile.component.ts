@@ -7,7 +7,6 @@ import { CapacitorService } from 'src/app/services/capacitor.service';
 import { FirebaseServiceService } from 'src/app/services/firebase-service.service';
 
 
-
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
