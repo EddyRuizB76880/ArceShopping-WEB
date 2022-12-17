@@ -1,8 +1,12 @@
 export class ShoppingCartRow{
     ownerEmail:string;
-    quantity:string;
-    price:number;
+    quantity:number;
+    unitPrice:number;
     productId:number;
+    firebaseDocId:string;
 
     constructor() {}
+    public setDocId(id: string){
+        this.firebaseDocId = id;
+    }
 }

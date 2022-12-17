@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
   }
 
   displayProducts(){
-    this.catalogue = this.productsService.getProducts();
+    this.catalogue = this.productsService.getProductsArray();
     this.catalogueLoaded = true;
   }
 }

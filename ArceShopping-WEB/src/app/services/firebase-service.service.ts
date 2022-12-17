@@ -1,7 +1,14 @@
-import {EventEmitter, Injectable, Query} from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
+import { Time } from '@angular/common'
 
-import { getStorage, ref, uploadBytes } from '@angular/fire/storage'
-import {
+import { 
+  getStorage, 
+  ref, 
+  uploadBytes,
+  getDownloadURL
+ } from '@angular/fire/storage'
+
+ import {
   Auth, 
   updatePassword,
   sendPasswordResetEmail,
@@ -18,13 +25,14 @@ import {
   doc, 
   Firestore, 
   addDoc, 
-  updateDoc
+  updateDoc,
+  deleteDoc
 } from '@angular/fire/firestore';
 
 import { Product } from '../model/product.model';
 import { User } from '../model/user.model';
-import { getDownloadURL } from 'firebase/storage';
 import { ShoppingCartRow } from '../model/shoppingCartRow.model';
+
 
 
 @Injectable({
@@ -34,6 +42,9 @@ import { ShoppingCartRow } from '../model/shoppingCartRow.model';
 export class FirebaseServiceService {
   public emitter:EventEmitter<string>;
   private userEmail: string;
+  private USER_COLLECTION: string = 'Users';
+  private SHOPPING_CART_COLLECTION: string = 'Shopping_cart'
+  private PURCHASE_COLLECTION: string = 'Purchase';
 
   constructor(private auth: Auth, private firestore: Firestore) {
     this.emitter = new EventEmitter<string>();
@@ -44,10 +55,9 @@ export class FirebaseServiceService {
     //ToDo: the password "holis" must be changed to a randomly generated string
     await createUserWithEmailAndPassword(this.auth, newUser.email, "holppoois")
     .then(()=>{
-      addDoc(collection(this.firestore,'Users'),
+      addDoc(collection(this.firestore, this.USER_COLLECTION),
       {name:newUser.name, id:newUser.id, email:newUser.email,
-      age: newUser.age, province:newUser.location, pic:"", 
-      passwordChanged: false});
+      age: newUser.age, location:newUser.location, picture:""});
       signOut(this.auth);
     }).catch((error)=>{
       console.log(error.message);
@@ -57,7 +67,7 @@ export class FirebaseServiceService {
   }
 
   public async updateUserDetails(user:User, userDocId:any, newPictureString:string){
-    const userDocReference = doc(this.firestore,'Users' , userDocId)
+    const userDocReference = doc(this.firestore,this.USER_COLLECTION , userDocId)
     const url = await this.saveImageInStorage(newPictureString);
     updateDoc(userDocReference,
       {
@@ -69,7 +79,7 @@ export class FirebaseServiceService {
   }
   
   public async getUser(){
-    const userQuery = query(collection(this.firestore,'Users'),
+    const userQuery = query(collection(this.firestore, this.USER_COLLECTION),
                       where('email','==', this.userEmail));
 
     await getDocs(userQuery).then((userDoc)=>{
@@ -83,20 +93,21 @@ export class FirebaseServiceService {
 
   public async getUserShoppingCart(){
     
-    const shoppingCartQuery = query(collection(this.firestore,'Shopping_cart'),
+    const shoppingCartQuery = query(collection(this.firestore, this.SHOPPING_CART_COLLECTION),
                               where('ownerEmail','==', this.userEmail));
     const shoppingCartItems = await getDocs(shoppingCartQuery);
-    let shoppingCart: ShoppingCartRow[] = []
+    let shoppingCartArray: ShoppingCartRow[] = []
 
     if(!shoppingCartItems.empty){
     
       shoppingCartItems.docs.forEach((doc)=>{
-          const shoppingCartItem = doc.data() as ShoppingCartRow;
-          shoppingCart.push(shoppingCartItem);
+          let shoppingCartItem = doc.data() as ShoppingCartRow;
+          shoppingCartItem.firebaseDocId = doc.id;
+          shoppingCartArray.push(shoppingCartItem);
       });
     }
    
-    this.emitter.emit(`0;${JSON.stringify(shoppingCart)}`);
+    this.emitter.emit(`0;${JSON.stringify(shoppingCartArray)}`);
   }
 
   public sendTemporaryPassword(email:string){
@@ -133,7 +144,7 @@ export class FirebaseServiceService {
       ownerEmail: this.auth.currentUser?.email, 
       productId: product.id, 
       quantity: requestedQuantity,
-      price: requestedQuantity*product.price,
+      unitPrice: product.price,
     }).then(()=>{
         this.emitter.emit("0:Producto añadido exitosamente");
     }).catch((error)=>{
@@ -141,6 +152,28 @@ export class FirebaseServiceService {
     });
 
   
+  }
+
+  public deleteFromShoppingCart(documentId: string){
+    const documentReference = doc(this.firestore, 'Shopping_cart', documentId);
+    deleteDoc(documentReference);
+  }
+
+  public async confirmPurchase(shoppingCartArray: ShoppingCartRow[], 
+                               purchaseTotal: number){
+    let result: string = '1; El carrito está vacío';
+    if(shoppingCartArray.length > 0){
+
+
+      await addDoc(collection(this.firestore, this.PURCHASE_COLLECTION),
+      { 
+        purchaseShoppingCart: JSON.stringify(shoppingCartArray), 
+        total: purchaseTotal, 
+        time: Date.now().toString() 
+      }).then(()=>{ result = '2; Compra procesada!'});
+    
+    }
+    this.emitter.emit(result);
   }
 
   public async saveImageInStorage(imageBlob: string){

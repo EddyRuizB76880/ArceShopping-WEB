@@ -1,16 +1,17 @@
+<app-header></app-header>
 <main class="main-content">
     <h1>Mi carrito de compras</h1>
 
-    <ul>
-        <li *ngFor="let shoppingCartItem of shoppingCart">
-            <img src = "{{products[shoppingCartItem.productId -1].thumbnail}}"/>
-            <p>{{products[shoppingCartItem.productId].description}}</p>
-            <input max="10" min="1" type="number" value="{{shoppingCartItem.quantity}}"/>
-            <p>{{shoppingCartItem.price}}</p>
-            <button>Quitar del carrito</button>
+    <ul>        <!-- The keyvalue keyword transforms the map to an array of <key, value> that can be iterated on-->
+        <li *ngFor="let shoppingCartItem of shoppingCart | keyvalue">
+            <img src = "{{products[shoppingCartItem.value.productId -1].thumbnail}}"/>
+            <p>{{products[shoppingCartItem.value.productId -1].title}}</p>
+            <input [(ngModel)]="shoppingCartItem.value.quantity" max="10" min="1" type="number" value="{{shoppingCartItem.value.quantity}}"/>
+            <p>{{shoppingCartItem.value.unitPrice * shoppingCartItem.value.quantity}}</p>
+            <button (click)="removeItem(shoppingCartItem.value.productId)">Quitar del carrito</button>
         </li>
     </ul>
 
-    <button>Confirmar mi compra</button>
-    <button>Vaciar carrito</button>
+    <button id= "confirmPurchaseButton">Confirmar mi compra</button>
+    <button id= "emptyCartButton">Vaciar carrito</button>
 </main>
