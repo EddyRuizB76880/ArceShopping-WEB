@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CapacitorService } from 'src/app/services/capacitor.service';
 
 @Component({
   selector: 'app-aboutus',
@@ -7,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AboutusComponent implements OnInit {
 
-  constructor() { }
+  constructor(private capacitorService: CapacitorService) { }
 
   ngOnInit(): void {
+    const capacitorGoogleMap: HTMLElement = document.getElementById('google-map') as HTMLElement;
+    this.capacitorService.setGoogleMapReference(capacitorGoogleMap);
   }
 
 }

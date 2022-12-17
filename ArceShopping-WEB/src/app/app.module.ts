@@ -7,6 +7,7 @@ import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { ToastrModule } from 'ngx-toastr';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { RegisterComponent } from './view/register/register.component';
@@ -38,13 +39,14 @@ import { PurchaseComponent } from './view/purchase/purchase.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    BrowserAnimationsModule, // required animations module
+    BrowserAnimationsModule, // required by animations module
     ToastrModule.forRoot(), // ToastrModule added
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore())
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA] //Required by capacitor/google maps
 })
 export class AppModule { }

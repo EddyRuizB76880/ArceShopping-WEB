@@ -1,0 +1,9 @@
+/* 
+   Style taken from capacitor's official docs: 
+   https://capacitorjs.com/docs/apis/google-maps
+*/
+capacitor-google-map {
+    display: inline-block;
+    width: 30vw;
+    height: 30vh;
+  }

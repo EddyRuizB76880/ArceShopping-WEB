@@ -1,6 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { Geolocation, GeolocationPosition } from '@capacitor/geolocation';
-import { ActionSheet, ActionSheetButtonStyle, ShowActionsOptions, ShowActionsResult } from '@capacitor/action-sheet';
+//import { Geolocation, GeolocationPosition } from '@capacitor/geolocation';
+import { GoogleMap } from '@capacitor/google-maps';
+import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
 import { Camera, CameraResultType } from '@capacitor/camera';
 
 @Injectable({
@@ -8,12 +9,49 @@ import { Camera, CameraResultType } from '@capacitor/camera';
 })
 
 export class CapacitorService {
-
+  private googleApiKey = 'GOOGLE-MAP-API-KEY';
+  private googleMapHtmlRef: HTMLElement;
+  private googleMap: GoogleMap;
+ 
   public emitter:EventEmitter<string>;
   constructor() {
     this.emitter = new EventEmitter<string>();
   }
 
+  // Google Maps functions
+  setGoogleMapReference(map:any){
+    this.googleMapHtmlRef = map;
+    this.generateGoogleMap();
+  }
+
+  //code adapted from capacitor's official docs:
+  //https://capacitorjs.com/docs/apis/google-maps
+  async generateGoogleMap(){
+    this.googleMap = await GoogleMap.create({
+      id: 'arceshoppingweb', // Unique identifier for this map instance
+      element: this.googleMapHtmlRef, // reference to the capacitor-google-map element
+      apiKey: this.googleApiKey, // Your Google Maps API Key
+      config: {
+        center: {
+          // The initial position to be rendered by the map
+          lat: 33.6,
+          lng: -117.9,
+        },
+        zoom: 20, // The initial zoom level to be rendered by the map
+      },
+    });
+
+    this.adjustMap();
+  }
+
+  adjustMap(){
+    //Follow this format to reposition map
+    const coordinates:any = {coordinate: {lat:9.9076439, lng: -84.088048}};
+    this.googleMap.setCamera(coordinates);
+    this.googleMap.addMarker(coordinates);
+  }
+  
+  // Camera functions
   async displayPictureOptions(){
     //Code adapted from capacitor's official website.
     //https://capacitorjs.com/docs/apis/action-sheet
