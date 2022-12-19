@@ -1,1 +1,21 @@
-<p>history works!</p>
+<app-header></app-header>
+<main class= "main-content">
+    <h1>Tu historial de compras</h1>
+    <table>
+        <tr>
+            <th>
+                Fecha de la compra
+            </th>
+
+            <th>
+                Total de la compra
+            </th>
+        </tr>
+
+        <tr *ngFor = "let purchase of userPurchases; let forIndex = index">
+            <td>{{purchase.purchaseTime | date:'short'}}</td>
+            <td>${{purchase.total}}</td>
+            <td><button [routerLink]="['/purchase']" (click)="setPurchase(forIndex)">Ver compra</button></td>
+        </tr>
+    </table>
+</main>

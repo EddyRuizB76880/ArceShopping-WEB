@@ -42,7 +42,7 @@ const routes: Routes = [
     ...canActivate(redirectUnauthorizedToLogin), 
   },
   {
-    path:'purchase/:id',
+    path:'purchase',
     component: PurchaseComponent,
     ...canActivate(redirectUnauthorizedToLogin), 
   },

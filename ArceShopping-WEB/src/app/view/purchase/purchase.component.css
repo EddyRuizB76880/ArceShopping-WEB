@@ -1,0 +1,18 @@
+table {
+    table-layout: fixed ;
+    width: 100% ;
+  }
+  
+  td{
+    width: 25% ;
+  } 
+
+  tr{
+    border-bottom:1vh;
+    border-color: black;
+  }
+
+  img{
+      height: 100%;
+      width: 100%;
+  }

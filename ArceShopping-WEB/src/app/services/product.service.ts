@@ -12,6 +12,7 @@ export class ProductService {
     this.initialized = false;
     this.productsMap = new Map<number, Product>();
     this.productsArray = [];
+
   }
 
   async start(){

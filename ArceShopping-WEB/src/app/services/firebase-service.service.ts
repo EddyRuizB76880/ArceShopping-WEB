@@ -32,6 +32,7 @@ import {
 import { Product } from '../model/product.model';
 import { User } from '../model/user.model';
 import { ShoppingCartRow } from '../model/shoppingCartRow.model';
+import { Purchase } from '../model/purchase.model';
 
 
 
@@ -169,11 +170,26 @@ export class FirebaseServiceService {
       { 
         purchaseShoppingCart: JSON.stringify(shoppingCartArray), 
         total: purchaseTotal, 
-        time: Date.now().toString() 
+        purchaseTime: Date.now().toString(),
+        ownerEmail: this.userEmail 
       }).then(()=>{ result = '2; Compra procesada!'});
     
     }
     this.emitter.emit(result);
+  }
+
+  public async retrieveUserPurchases(){
+    let userPurchases: Purchase[] = [];
+
+    const purchasesQuery = query(collection(this.firestore,this.PURCHASE_COLLECTION),
+                           where('ownerEmail', '==' , this.userEmail));
+    const purchaseDocs = await getDocs(purchasesQuery);
+    
+    if(!purchaseDocs.empty){
+      purchaseDocs.docs.forEach((doc)=>{ userPurchases.push(doc.data() as Purchase) });
+    }
+
+    this.emitter.emit(`0;${JSON.stringify(userPurchases)}`);
   }
 
   public async saveImageInStorage(imageBlob: string){

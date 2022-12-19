@@ -1,1 +1,21 @@
-<p>purchase works!</p>
+<app-header></app-header>
+<main class="main-content">
+    <h1>Compra del {{selectedPurchase.purchaseTime | date: 'short'}}</h1>
+    <table>
+        <tr>
+            <th> </th>
+            <th> Producto </th>
+            <th> Precio unitario</th>
+            <th> Cantidad </th>
+            <th> Precio total</th>
+        </tr>
+        <tr *ngFor = "let shoppingCartItem of purchaseShoppingCart">
+            <td> <img src="{{productList[shoppingCartItem.productId-1].thumbnail}}"> </td>
+            <td> <p>{{productList[shoppingCartItem.productId-1].title}}</p> </td>
+            <td> <p>{{shoppingCartItem.unitPrice}}</p></td>
+            <td> <p>{{shoppingCartItem.quantity}}</p></td>
+            <td> <p>{{shoppingCartItem.unitPrice*shoppingCartItem.quantity}}</p></td>
+        </tr>
+    </table>
+
+</main>
