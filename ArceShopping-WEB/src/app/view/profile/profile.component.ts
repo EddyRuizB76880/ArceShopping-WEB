@@ -1,25 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { User } from 'src/app/model/user.model';
 import { CapacitorService } from 'src/app/services/capacitor.service';
 import { FirebaseServiceService } from 'src/app/services/firebase-service.service';
-
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
+
 export class ProfileComponent implements OnInit {
   user:User;
-  userDocId: string;
+  userDocId: string;// This attribute is needed to save updates on firebase
   firebaseSubscription: any;
   capacitorSubscription: any;
   profilePicture: HTMLImageElement; 
+  saveButton: HTMLButtonElement;
+  userRetrieved: Boolean = false;
+
   constructor(private firebaseService: FirebaseServiceService,
-              private router: Router,
+              private spinner: NgxSpinnerService,
               private toast: ToastrService,
               private capacitorService: CapacitorService) 
   { 
@@ -33,24 +36,30 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const setProfilePictureButton = document.getElementById('setProfilePicButton') as HTMLButtonElement;
-    setProfilePictureButton.addEventListener('click',()=>{
-        this.capacitorService.displayPictureOptions();
-    });
-    this.profilePicture = document.getElementById('profilePic') as HTMLImageElement;
-    this.loadUser();
+    this.spinner.show();
+    this.firebaseService.getUser();
   }
 
   ngOnDestroy():void{
+    //Avoid memory leaks and unexpected behaviour 
+    //by unsubscribing to both event emitters.
     this.firebaseSubscription.unsubscribe();
     this.capacitorSubscription.unsubscribe();
   }
 
-  async loadUser(){
-    await this.firebaseService.getUser();
-    if(this.user.picture != ''){
+  getHtmlElements(){
+    const setProfilePictureButton = document.getElementById('setProfilePicButton') as HTMLButtonElement;
+    setProfilePictureButton.addEventListener('click',()=>{
+        this.capacitorService.displayPictureOptions();
+    });
+    this.saveButton = document.getElementById('saveButton') as HTMLButtonElement;
+    this.profilePicture = document.getElementById('profilePic') as HTMLImageElement;
+
+    if(this.user.picture !== ''){
       this.profilePicture.src = this.user.picture;
     }
+
+    this.spinner.hide();
   }
 
   handleResult(message: string){
@@ -58,16 +67,28 @@ export class ProfileComponent implements OnInit {
     const code = message.split(';', 3)
     switch(code[0]){
       case '0':
+        //User data was retrieved
+        this.userRetrieved = true;
         this.userDocId = code[1];
         this.user = JSON.parse(code[2]) as User;
+        
+        setTimeout(()=>{
+          this.getHtmlElements();
+        },1000);
+       
         break;
       case '1':
+        //Data update was successful
         this.toast.success(code[1], 'Exito');
+        this.saveButton.disabled = false;
         break;
       case '2':
+        //Capacitor either took a picture or retrieved an image from gallery
+        //and now is sending over the path to it.
         this.profilePicture.src = code[1];
         break
       case '3':
+        //User invoked capacitor's service, but did not take a pic nor choose an image.
         this.toast.warning(code[2], 'Aviso');
       break
     }
@@ -79,6 +100,7 @@ export class ProfileComponent implements OnInit {
     //ToDO: Find  a way to determine which fields have been modified and only update those
     //with firebase service.
     if(userInfo.valid){
+      this.saveButton.disabled = true;
       this.firebaseService.updateUserDetails(this.user, this.userDocId, 
                                               this.profilePicture.src);
     }else{

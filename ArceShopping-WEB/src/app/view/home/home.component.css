@@ -17,8 +17,8 @@
 
 }
 
-
-
-img, p{
-    flex-grow: 1;
+img{   
+    object-fit: cover;
+    width: 30vw;
+    height: 30vh;
 }

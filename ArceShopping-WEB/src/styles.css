@@ -3,6 +3,10 @@ html, input, button{
     font-family: sans-serif;
 }
 
+ul{
+  list-style: none;
+}
+
 fieldset{
   border: none;
 }
@@ -24,8 +28,27 @@ input{
   height: 9vh;
 }
 
+.register-form{
+  display: flex;
+  flex-direction: column;
+  row-gap: 10vh;
+  margin-top: 10vh;
+  justify-content: center;
+}
+
+.register-form-field{
+  display: flex;
+  flex-direction: row;
+  column-gap: 10vw;
+}
+
 .confirm-button{
   background-color: #39fc03;
+}
+
+.normal-button{
+  color: #000000;
+  background-color: #999999;
 }
 
 .cancel-button{

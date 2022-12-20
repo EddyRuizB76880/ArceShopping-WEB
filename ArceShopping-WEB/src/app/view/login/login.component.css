@@ -1,15 +1,10 @@
-main{
+main, form{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
     align-content: space-between;
-    margin-top: 6vw;
-}
-
-
-fieldset{
-    border: none;
+    row-gap: 3vh;
 }
 
 input{
@@ -18,7 +13,6 @@ input{
 
 ul{
   padding-left: 0;
-  list-style: none;
   display: flex; 
   flex-direction: row;
   align-items: center;

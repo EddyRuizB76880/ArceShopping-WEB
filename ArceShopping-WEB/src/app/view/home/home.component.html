@@ -1,7 +1,10 @@
 <app-header></app-header>
-<main class ="main-content">
+<!--Displays a spinner while data is loading-->
+<ngx-spinner type="ball-scale-multiple" bdColor="rgba(0, 0, 0, 0.9)"></ngx-spinner>
 
-    <div *ngIf="catalogueLoaded" id="catalogue">    
+<main  *ngIf="catalogueLoaded"  class ="main-content">
+   
+    <div id="catalogue">    
         <div *ngFor="let product of catalogue" class="productContainer">
             <img src= "{{product.thumbnail}}"/>
             <a [routerLink]="['/product',product.id]">"{{product.title}}"</a>

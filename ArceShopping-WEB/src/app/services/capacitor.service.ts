@@ -9,7 +9,7 @@ import { Camera, CameraResultType } from '@capacitor/camera';
 })
 
 export class CapacitorService {
-  private googleApiKey = 'GOOGLE-MAP-API-KEY';
+  private googleApiKey: string = 'key';
   private googleMapHtmlRef: HTMLElement;
   private googleMap: GoogleMap;
  
@@ -93,18 +93,23 @@ export class CapacitorService {
   //Code adapted from capacitor's official documentation
   //https://capacitorjs.com/docs/apis/camera
   async takePicture(){
+    let result:string = '3; No se eligió foto';
     const image = await Camera.getPhoto({
       quality: 90,
       allowEditing: true,
       resultType: CameraResultType.Uri
     });
-    
-    this.emitter.emit(`2;${image.webPath}`);
+
+    if(image !== undefined){
+      result = `2;${image.webPath}`;
+    }
+
+    this.emitter.emit(result);
   }
 
   async pickImageFromGallery(){
+    let result:string = '3; No se eligió foto';
     const photo = await Camera.pickImages({limit: 1})
-    let result = '3; No se eligió foto';
     if(photo != undefined){
       result = `2;${photo.photos[0].webPath}`
     }

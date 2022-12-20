@@ -21,6 +21,11 @@ import { AboutusComponent } from './view/aboutus/aboutus.component';
 import { HistoryComponent } from './view/history/history.component';
 import { PurchaseComponent } from './view/purchase/purchase.component';
 import { ForgopasswordComponent } from './view/forgopassword/forgopassword.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
+
+interface NgxSpinnerConfig {
+  type?: string;
+}
 
 @NgModule({
   declarations: [
@@ -41,6 +46,7 @@ import { ForgopasswordComponent } from './view/forgopassword/forgopassword.compo
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    NgxSpinnerModule,
     BrowserAnimationsModule, // required by animations module
     ToastrModule.forRoot(), // ToastrModule added
     provideFirebaseApp(() => initializeApp(environment.firebase)),

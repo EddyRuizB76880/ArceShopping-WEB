@@ -32,6 +32,8 @@ export class LoginComponent implements OnInit {
   async onSubmit(loginForm: NgForm){
     if(loginForm.valid){
       await this.firebaseService.login(this.userEmail, this.introducedPassword);
+    }else{
+      this.toast.warning('Ambos campos deben ser llenados','Aviso');
     }
   }
 

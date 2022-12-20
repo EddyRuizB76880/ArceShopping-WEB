@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ProductService } from 'src/app/services/product.service';
 import { Product } from '../../model/product.model'
 @Component({
@@ -9,11 +10,13 @@ import { Product } from '../../model/product.model'
 export class HomeComponent implements OnInit {
   catalogue:Product[];
   catalogueLoaded:Boolean;
-  constructor(private productsService:ProductService) { }
+  constructor(private productsService: ProductService,
+              private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
     //When returning to this page, displayProducts() needs to be executed again
     //or else, the page will be blank(probably because of the ngIf on the HTML).
+    this.spinner.show();
     if(!this.productsService.isReady()){
       this.getProducts();
     }else{
@@ -29,5 +32,6 @@ export class HomeComponent implements OnInit {
   displayProducts(){
     this.catalogue = this.productsService.getProductsArray();
     this.catalogueLoaded = true;
+    this.spinner.hide();
   }
 }

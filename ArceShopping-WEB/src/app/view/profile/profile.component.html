@@ -1,24 +1,27 @@
 <app-header></app-header>
-<main class= "main-content">
-{{user|json}}
+<!--This tag enables the ngx spinner-->
+<ngx-spinner type="ball-scale-multiple" bdColor="rgba(0, 0, 0, 0.9)"></ngx-spinner>
+<main *ngIf="userRetrieved" class= "main-content">
     <h1>Mi perfil</h1>
     <img id="profilePic" src="assets/img/user_default_icon.png"/>
-    <button id="setProfilePicButton">Elegir foto</button>
-    <form #userInfo="ngForm" (ngSubmit)="onSubmit(userInfo)">
+    <button id="setProfilePicButton" class="normal-button">Elegir foto</button>
+    <form class= "register-form" #userInfo="ngForm" (ngSubmit)="onSubmit(userInfo)">
+        <div class="register-form-field">
         <fieldset>
             <label for="userFullName">Nombre completo</label>
             <input id="userFullName"type="text" [(ngModel)]="user.name" name="userFullName" 
             required value="{{user.name}}"/>
         </fieldset>
 
-
+        <!--Neither id nor email may be modified, per requirements-->
         <fieldset>
             <label for="email">Correo electrónico</label>
             <input id="name"type="text" [(ngModel)]="user.email" name="userEmail" 
             disabled required placeholder="{{user.email}}"/>
         </fieldset>
+        </div>
 
-
+        <div class="register-form-field">
         <fieldset>
             <label for="userId">Identificación</label>
             <input id="userId" type="number" [(ngModel)]="user.id" name="userId" 
@@ -30,6 +33,7 @@
             <input id="age"type="number" [(ngModel)]="user.age" name="age" 
             required placeholder="{{user.age}}"/>
         </fieldset>
+        </div>
         
         <fieldset>
             <label for="location">Ubicación</label>
@@ -37,7 +41,7 @@
             required placeholder="{{user.location}}"/>
         </fieldset>
 
-        <button type="submit">Guardar cambios</button>
+        <button class="confirm-button" id="saveButton" type="submit">Guardar cambios</button>
     </form>
 
 </main>

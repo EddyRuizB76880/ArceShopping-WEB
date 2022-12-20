@@ -114,17 +114,33 @@ export class FirebaseServiceService {
     }); 
   }
   
+  /* 
+    This method retrieves user's data and sends it over to component.
+  */
   public async getUser(){
+    let response: string = '';
+    //Create a query that will allow us to find the current user's data
     const userQuery = query(collection(this.firestore, this.USER_COLLECTION),
                       where('email','==', this.userEmail));
 
-    await getDocs(userQuery).then((userDoc)=>{
-      if(!userDoc.empty){
-        const user = userDoc.docs[0].data() as User;
-        //const userJsonString = user.toJsonString(); throws error user.toJsonString is not a function
-        this.emitter.emit(`0;${userDoc.docs[0].id};${JSON.stringify(user)}`);
-      }
-    })
+    //Get data asynchronously, don't proceed with this method until data is retrieved.
+    const userDoc = await getDocs(userQuery);
+    
+    //Check if query returned any data.
+    if(!userDoc.empty){
+      //Cast data into an User object
+      const user = userDoc.docs[0].data() as User;
+      
+      //JSON.stringify turns objects into JSON strings.
+      //We need this so we can send data over to component
+      //by using event emitter. Additionally, document's id
+      //is sent over too, since it will be needed to save changes
+      //on user's doc.
+      response = `0;${userDoc.docs[0].id};${JSON.stringify(user)}`;;
+    }
+
+    //Finally, send found data to component.
+    this.emitter.emit(response);
   }
 
   public async getUserShoppingCart(){
