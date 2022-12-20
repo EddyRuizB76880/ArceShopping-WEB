@@ -20,6 +20,7 @@ export class HeaderComponent implements OnInit {
   }
 
   async logoutButton(){
+    console.log('voy')
    await this.firebaseService.logout();
    this.router.navigateByUrl('',{replaceUrl:true});
   }

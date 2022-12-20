@@ -13,14 +13,14 @@
       </fieldset>
     </div>
   
-    <button type="submit" > Iniciar Sesión </button>
+    <button class="confirm-button" type="submit" > Iniciar Sesión </button>
   </form>  
       <ul id= "register">
         <li>  
           <p>No tienes cuenta?</p>
         </li>
         <li>
-          <a href="register">Registrate</a>
+          <a [routerLink]="['/register']">Registrate</a>
         </li>
       </ul>
       
@@ -29,9 +29,11 @@
           <p>Olvidaste tu contraseña?</p>
         </li>
         <li>
-          <a href="">Crea una nueva</a>
+          <a [routerLink]="['/forgot-password']">Restablécela</a>
         </li>
       </ul>
+
+      <a [routerLink]="['/aboutus']">Acerca de ArceShopping</a>
    
   </main>
   

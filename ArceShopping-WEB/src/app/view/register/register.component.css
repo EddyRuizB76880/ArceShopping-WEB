@@ -1,3 +1,22 @@
+.register-form{
+  display: flex;
+  flex-direction: column;
+  row-gap: 10vh;
+  margin-top: 10vh;
+  justify-content: center;
+}
+
+.register-form-field{
+  display: flex;
+  flex-direction: row;
+  column-gap: 10vw;
+}
+
+nav{
+  position:absolute;
+  margin-top: 80vh;
+}
+
 /*Styles provided by google: https://angular.io/guide/forms*/
 .ng-valid[required], .ng-valid.required  {
     border-left: 10px solid #42A948; /* green */

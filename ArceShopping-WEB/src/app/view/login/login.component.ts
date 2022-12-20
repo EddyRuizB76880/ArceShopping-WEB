@@ -13,15 +13,20 @@ import { FirebaseServiceService } from 'src/app/services/firebase-service.servic
 export class LoginComponent implements OnInit {
   introducedPassword:string;
   userEmail:string;
+  firebaseSubscription: any;
 
   constructor(private firebaseService: FirebaseServiceService,
               private toast: ToastrService,
               private router: Router) { }
 
   ngOnInit(): void {
-    this.firebaseService.emitter.subscribe((message)=>{
+    this.firebaseSubscription = this.firebaseService.emitter.subscribe((message)=>{
       this.handleResult(message);
     });
+  }
+
+  ngOnDestroy(): void{
+    this.firebaseSubscription.unsubscribe();
   }
 
   async onSubmit(loginForm: NgForm){

@@ -16,11 +16,6 @@ input{
     width: 100%;
 }
 
-button{
-    flex-basis: auto;
-}
-
-
 ul{
   padding-left: 0;
   list-style: none;

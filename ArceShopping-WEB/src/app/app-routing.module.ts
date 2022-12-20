@@ -12,6 +12,7 @@ import { PurchaseComponent } from './view/purchase/purchase.component';
 import { AboutusComponent } from './view/aboutus/aboutus.component';
 import { HistoryComponent } from './view/history/history.component';
 import { CheckoutComponent } from './view/checkout/checkout.component';
+import { ForgopasswordComponent } from './view/forgopassword/forgopassword.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['']);
 const redirectLoggedInToHome = () => redirectLoggedInTo(['home']);
@@ -25,6 +26,14 @@ const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent
+  },
+  {
+    path: 'forgot-password',
+    component: ForgopasswordComponent
+  },
+  {
+    path:'aboutus',
+    component: AboutusComponent,
   },
   {
     path:'home',
@@ -44,11 +53,6 @@ const routes: Routes = [
   {
     path:'purchase',
     component: PurchaseComponent,
-    ...canActivate(redirectUnauthorizedToLogin), 
-  },
-  {
-    path:'aboutus',
-    component: AboutusComponent,
     ...canActivate(redirectUnauthorizedToLogin), 
   },
   {

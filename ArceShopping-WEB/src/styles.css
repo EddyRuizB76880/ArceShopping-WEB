@@ -3,6 +3,35 @@ html, input, button{
     font-family: sans-serif;
 }
 
+fieldset{
+  border: none;
+}
+
+button{
+  color: white;
+  border-radius: 12px;
+  height: 7.5vh;
+  width: 15vw;
+}
+
+button:hover{
+  filter: brightness(85%);
+}
+
+input{
+  border-radius: 8px;
+  width: 30vw;
+  height: 9vh;
+}
+
+.confirm-button{
+  background-color: #39fc03;
+}
+
+.cancel-button{
+  background-color: #f03a3d;
+}
+
 .main-content
 { 
   margin-top: 10vh;

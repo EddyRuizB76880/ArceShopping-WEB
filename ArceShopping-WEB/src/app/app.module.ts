@@ -20,6 +20,7 @@ import { CheckoutComponent } from './view/checkout/checkout.component';
 import { AboutusComponent } from './view/aboutus/aboutus.component';
 import { HistoryComponent } from './view/history/history.component';
 import { PurchaseComponent } from './view/purchase/purchase.component';
+import { ForgopasswordComponent } from './view/forgopassword/forgopassword.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { PurchaseComponent } from './view/purchase/purchase.component';
     CheckoutComponent,
     AboutusComponent,
     HistoryComponent,
-    PurchaseComponent
+    PurchaseComponent,
+    ForgopasswordComponent
   ],
   imports: [
     BrowserModule,

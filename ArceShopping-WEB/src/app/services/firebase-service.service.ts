@@ -60,12 +60,47 @@ export class FirebaseServiceService {
       {name:newUser.name, id:newUser.id, email:newUser.email,
       age: newUser.age, location:newUser.location, picture:""});
       signOut(this.auth);
+      this.sendTemporaryPassword(newUser.email);
     }).catch((error)=>{
       console.log(error.message);
       this.emitter.emit('1:El correo electrónico ya está registrado');
     })
     
   }
+
+
+  public async sendTemporaryPassword(email:string){
+    let result: string = '';
+
+    await sendPasswordResetEmail(this.auth, email)
+    .then(() => {
+      result = '0:Revise su correo y establezca una contraseña';
+    }).catch((error) =>{ 
+      result = '1:Correo no válido'
+    })
+
+    this.emitter.emit(result);
+  }
+
+  async login(email:string, password:string){
+    await signInWithEmailAndPassword(this.auth, email, password).then(
+    (response)=>{
+    if(response.user){
+      if(response.user.emailVerified){
+        this.emitter.emit('0: Inicio de sesión exitoso');
+      }else{
+        this.emitter.emit('1: Verifique su correo.');
+      }
+    }
+    }).catch((error)=>{
+      console.log(error);
+      this.emitter.emit('2: Credenciales incorrectas');
+    })
+  }
+
+  public async logout(){
+    await signOut(this.auth);
+  }  
 
   public async updateUserDetails(user:User, userDocId:any, newPictureString:string){
     const userDocReference = doc(this.firestore,this.USER_COLLECTION , userDocId)
@@ -111,33 +146,6 @@ export class FirebaseServiceService {
     this.emitter.emit(`0;${JSON.stringify(shoppingCartArray)}`);
   }
 
-  public sendTemporaryPassword(email:string){
-    sendPasswordResetEmail(this.auth, email)
-    .then(() => {
-      this.emitter.emit('0:Revise su correo y establezca una contraseña');
-    })
-  }
-
-  async login(email:string, password:string){
-    await signInWithEmailAndPassword(this.auth, email, password).then(
-    (response)=>{
-    if(response.user){
-      if(response.user.emailVerified){
-        this.emitter.emit('0: Inicio de sesión exitoso');
-      }else{
-        this.emitter.emit('1: Verifique su correo.');
-      }
-    }
-  }).catch((error)=>{
-    console.log(error);
-    this.emitter.emit('2: Credenciales incorrectas');
-  })
-    
-  }
-
-  public async logout(){
-    await signOut(this.auth);
-  }  
 
   public async insertToShoppingCart(product:Product, requestedQuantity:number){
     await addDoc(collection(this.firestore,'Shopping_cart'),
