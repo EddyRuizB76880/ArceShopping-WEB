@@ -108,7 +108,7 @@ export class FirebaseServiceService {
     updateDoc(userDocReference,
       {
         name:user.name, id:user.id, email:user.email,
-        age: user.age, province:user.location, picture:url
+        age: user.age, location:user.location, picture:url
       }).then(()=>{
       this.emitter.emit('1;Cambios guardados');
     }); 
@@ -164,26 +164,21 @@ export class FirebaseServiceService {
 
 
   public async insertToShoppingCart(product:Product, requestedQuantity:number){
-    //Validate if product was previously added to sc-
-    //-- if it was, validate if requested amount would make customer exceed the allowed quantity of a single product in sc(10)
-    // --- if it does, send error message.
-    // --- if it does not, add requested quantity to current quantity
+   let response: string = '';
 
-    //-- if product is being added for the first time, simply add the sc row to firebase
-    
-    await addDoc(collection(this.firestore,'Shopping_cart'),
+    await addDoc(collection(this.firestore, this.SHOPPING_CART_COLLECTION),
     { 
       ownerEmail: this.auth.currentUser?.email, 
       productId: product.id, 
       quantity: requestedQuantity,
       unitPrice: product.price,
     }).then(()=>{
-        this.emitter.emit("0;Producto añadido exitosamente");
+        response = "0;Producto añadido exitosamente";
     }).catch((error)=>{
-        this.emitter.emit("1;Ocurrió un error");
+        response = "1;Ocurrió un error";
     });
 
-  
+    this.emitter.emit(response);
   }
 
   public async getShoppingCartItem(productId: string){
@@ -191,6 +186,7 @@ export class FirebaseServiceService {
     const itemQuery = query(collection(this.firestore, this.SHOPPING_CART_COLLECTION),
                       where('ownerEmail','==', this.userEmail),
                       where('productId','==', parseInt(productId)));
+
     const retrievedItem = await getDocs(itemQuery);
     if(!retrievedItem.empty){
       const shoppingCartItem = retrievedItem.docs[0].data() as ShoppingCartRow; 
@@ -200,13 +196,19 @@ export class FirebaseServiceService {
     this.emitter.emit(`2;${response}`);
   }
 
-  public updateShoppingCartRowQuantity(newQuantity: number, scDocId: string){
+  public async updateShoppingCartRowQuantity(newQuantity: number, scDocId: string){
+    let response: string = '';
     const scDocReference = doc(this.firestore,this.SHOPPING_CART_COLLECTION , scDocId);
 
-    updateDoc(scDocReference,{ quantity:newQuantity }).
+    await updateDoc(scDocReference,{ quantity:newQuantity }).
     then(()=>{
-      this.emitter.emit('0; La cantidad se ha añadido al carrito.');
+      response = '0; La cantidad se ha añadido al carrito.';
+    }).catch((error)=>{
+      response = "1;Ocurrió un error";
     }); 
+    
+    
+    this.emitter.emit(response);
   }
 
   public deleteFromShoppingCart(documentId: string){
