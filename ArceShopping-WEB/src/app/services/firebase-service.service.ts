@@ -103,7 +103,7 @@ export class FirebaseServiceService {
   }  
 
   public async updateUserDetails(user:User, userDocId:any, newPictureString:string){
-    const userDocReference = doc(this.firestore,this.USER_COLLECTION , userDocId)
+    const userDocReference = doc(this.firestore,this.USER_COLLECTION , userDocId);
     const url = await this.saveImageInStorage(newPictureString);
     updateDoc(userDocReference,
       {
@@ -164,6 +164,13 @@ export class FirebaseServiceService {
 
 
   public async insertToShoppingCart(product:Product, requestedQuantity:number){
+    //Validate if product was previously added to sc-
+    //-- if it was, validate if requested amount would make customer exceed the allowed quantity of a single product in sc(10)
+    // --- if it does, send error message.
+    // --- if it does not, add requested quantity to current quantity
+
+    //-- if product is being added for the first time, simply add the sc row to firebase
+    
     await addDoc(collection(this.firestore,'Shopping_cart'),
     { 
       ownerEmail: this.auth.currentUser?.email, 
@@ -171,12 +178,35 @@ export class FirebaseServiceService {
       quantity: requestedQuantity,
       unitPrice: product.price,
     }).then(()=>{
-        this.emitter.emit("0:Producto añadido exitosamente");
+        this.emitter.emit("0;Producto añadido exitosamente");
     }).catch((error)=>{
-        this.emitter.emit("1:Ocurrió un error");
+        this.emitter.emit("1;Ocurrió un error");
     });
 
   
+  }
+
+  public async getShoppingCartItem(productId: string){
+    let response: string = '';
+    const itemQuery = query(collection(this.firestore, this.SHOPPING_CART_COLLECTION),
+                      where('ownerEmail','==', this.userEmail),
+                      where('productId','==', parseInt(productId)));
+    const retrievedItem = await getDocs(itemQuery);
+    if(!retrievedItem.empty){
+      const shoppingCartItem = retrievedItem.docs[0].data() as ShoppingCartRow; 
+      response= `${JSON.stringify(shoppingCartItem)};${retrievedItem.docs[0].id}`;
+    }
+
+    this.emitter.emit(`2;${response}`);
+  }
+
+  public updateShoppingCartRowQuantity(newQuantity: number, scDocId: string){
+    const scDocReference = doc(this.firestore,this.SHOPPING_CART_COLLECTION , scDocId);
+
+    updateDoc(scDocReference,{ quantity:newQuantity }).
+    then(()=>{
+      this.emitter.emit('0; La cantidad se ha añadido al carrito.');
+    }); 
   }
 
   public deleteFromShoppingCart(documentId: string){
@@ -188,7 +218,6 @@ export class FirebaseServiceService {
                                purchaseTotal: number){
     let result: string = '1; El carrito está vacío';
     if(shoppingCartArray.length > 0){
-
 
       await addDoc(collection(this.firestore, this.PURCHASE_COLLECTION),
       { 

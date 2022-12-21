@@ -3,6 +3,10 @@ html, input, button{
     font-family: sans-serif;
 }
 
+i{
+  margin-right: 0.3vw;
+}
+
 ul{
   list-style: none;
 }

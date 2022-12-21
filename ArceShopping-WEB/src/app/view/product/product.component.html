@@ -1,10 +1,18 @@
 <app-header></app-header>
-<main> <!--TODO: Put an ngIf in this tag-->
-
-    <h1>{{product.title}}</h1>
+<main class="main-content" *ngIf="productExists"> 
     <img src ="{{product.thumbnail}}"/>
-    <p>{{product.description}}</p>
-    <p>{{product.price}}</p>
-    <input id="quantity" type="number" min="1" max="10" value="1">
-    <button id="add-button">Añadir producto</button>
+    <div id="productDetails">
+        <h2><strong>{{product.title}} de {{product.brand}}</strong></h2>
+        <p>Descripción: {{product.description}}</p>
+        <p>Precio: ${{product.price}}</p>
+        <p>Cantidad disponible: {{product.stock}}</p>
+        <div id="rating">
+            <i class="bi bi-star-fill"></i>
+            <p>{{product.rating}}</p>
+        </div>
+        <input [(ngModel)]='requestedQuantity'id="quantity" type="number" min="1" max="10" value="1">
+        <button (click)="addProductToShoppingCart()" class="normal-button" id="add-button">
+            <i class="bi bi-cart"></i>Añadir producto
+        </button>
+    </div>
 </main>

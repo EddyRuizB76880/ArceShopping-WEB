@@ -79,6 +79,7 @@ export class ProfileComponent implements OnInit {
         break;
       case '1':
         //Data update was successful
+        this.spinner.hide();
         this.toast.success(code[1], 'Exito');
         this.saveButton.disabled = false;
         break;
@@ -90,7 +91,7 @@ export class ProfileComponent implements OnInit {
       case '3':
         //User invoked capacitor's service, but did not take a pic nor choose an image.
         this.toast.warning(code[2], 'Aviso');
-      break
+        break
     }
   }
 
@@ -101,6 +102,7 @@ export class ProfileComponent implements OnInit {
     //with firebase service.
     if(userInfo.valid){
       this.saveButton.disabled = true;
+      this.spinner.show();
       this.firebaseService.updateUserDetails(this.user, this.userDocId, 
                                               this.profilePicture.src);
     }else{

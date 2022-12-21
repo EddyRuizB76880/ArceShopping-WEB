@@ -1,0 +1,34 @@
+.main-content{
+    display: flex;
+    flex-direction: row;
+    column-gap: 1vw;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20vh;
+}
+
+#productDetail{
+    display: flex;
+    flex-direction: column;
+    row-gap: 1vh;
+}
+
+#rating{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#quantity{
+    height: 5vh;
+    width: 3vw;
+    margin-right: 2vw;
+}
+
+
+img{
+    width: 20vw;
+    height: 20vw;
+    object-fit: cover;
+    border-radius: 30%;
+}

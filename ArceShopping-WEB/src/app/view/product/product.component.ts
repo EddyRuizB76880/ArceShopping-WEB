@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Product } from 'src/app/model/product.model';
+import { ShoppingCartRow } from 'src/app/model/shoppingCartRow.model';
 import { FirebaseServiceService } from 'src/app/services/firebase-service.service';
 import { ProductService } from 'src/app/services/product.service';
 
@@ -13,8 +15,13 @@ import { ProductService } from 'src/app/services/product.service';
 
 export class ProductComponent implements OnInit {
   product:Product;
+  //this attribute allows us to do the necessary validations on 
+  //the component before saving a new shopping cart row in firebase 
+  shoppingCartRow: ShoppingCartRow;
+  shoppingCartRowId: string;
+  productCurrentQuantity:number = 0;
   productExists:Boolean;
-  addButton:HTMLButtonElement;
+  requestedQuantity: number = 1;
   firebaseSubscription:any
   sub:any;
   productId:string;
@@ -22,10 +29,11 @@ export class ProductComponent implements OnInit {
               private firebaseService: FirebaseServiceService,
               private route: ActivatedRoute,
               private router: Router,
-              private toast: ToastrService) {}
+              private toast: ToastrService,
+              private spinner: NgxSpinnerService) {}
 
   ngOnInit(): void {
-
+    this.spinner.show();
     this.sub = this.route.params.subscribe((params:any) => {
       this.productId = params['id'];
       this.getProduct();
@@ -35,11 +43,7 @@ export class ProductComponent implements OnInit {
       this.handleResult(message);
     });
 
-    this.addButton = document.getElementById('add-button') as HTMLButtonElement;
-    this.addButton.addEventListener('click',()=>{
-      this.addProductToShoppingCart();
-    });
-
+    this.firebaseService.getShoppingCartItem(this.productId);
   }
 
   ngOnDestroy():void{
@@ -49,7 +53,8 @@ export class ProductComponent implements OnInit {
 
   //ToDo: Find a way to share code between components without creating another service.
   handleResult(message:string){
-    const code = message.split(':',2);
+    const code = message.split(';',3);
+    this.enableInput()
     switch(code[0]){
       case '0':
         this.toast.success(code[1], 'Exito!');
@@ -58,15 +63,24 @@ export class ProductComponent implements OnInit {
       case '1':
         this.toast.error(code[1], 'Error');
         break;
+      
+      case '2':
+        //if product is being included in the sc for the first time, this string will be empty 
+        if(code[1].length > 0){ 
+          this.shoppingCartRow = JSON.parse(code[1]) as ShoppingCartRow;
+          this.shoppingCartRowId = code[2];
+          this.productCurrentQuantity = this.shoppingCartRow.quantity;
+        }
+        break;
     }
   }
 
   async getProduct(){
     await this.checkService();
     this.product= this.productsService.getProduct(parseInt(this.productId)) as Product;
-      if(this.product != undefined){     
-        this.productExists = true;
-      }
+    if(this.product != undefined){     
+      this.productExists = true;
+    }
   }
 
   async checkService(){
@@ -75,8 +89,33 @@ export class ProductComponent implements OnInit {
     }
   }
 
+  disableInput(){
+    this.spinner.show();
+  }
+
+  enableInput(){
+    this.spinner.hide();
+  }
+
   addProductToShoppingCart(){
-    const requestedQuantity = document.getElementById('quantity') as HTMLInputElement;
-    this.firebaseService.insertToShoppingCart(this.product, parseInt(requestedQuantity.value));
+    this.disableInput();
+    const newQuantity: number = this.requestedQuantity + this.productCurrentQuantity;
+    
+    if(newQuantity <= this.product.stock){
+      if(this.shoppingCartRow === undefined){
+        this.firebaseService.insertToShoppingCart(this.product, 
+                                                  this.requestedQuantity);
+      }else{
+        if(newQuantity <= 10){
+          this.firebaseService.updateShoppingCartRowQuantity(newQuantity, this.shoppingCartRowId);
+        }else{
+          this.toast.warning('Sólo se puede llevar hasta 10 productos','Aviso');
+          this.enableInput();
+        }
+      }
+    }else{
+      this.toast.warning('La cantidad solicitada excede el stock disponible','Aviso');
+      this.enableInput();
+    }
   }
 }

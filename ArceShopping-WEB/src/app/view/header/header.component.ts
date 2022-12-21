@@ -13,14 +13,10 @@ export class HeaderComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit(): void {
-    const logoutButton = document.getElementById('logout') as HTMLButtonElement;
-    logoutButton.addEventListener('click',()=>{
-      this.logoutButton();
-    });
+  
   }
 
-  async logoutButton(){
-    console.log('voy')
+  async logout(){
    await this.firebaseService.logout();
    this.router.navigateByUrl('',{replaceUrl:true});
   }

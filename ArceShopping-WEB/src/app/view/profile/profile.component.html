@@ -1,10 +1,9 @@
 <app-header></app-header>
-<!--This tag enables the ngx spinner-->
-<ngx-spinner type="ball-scale-multiple" bdColor="rgba(0, 0, 0, 0.9)"></ngx-spinner>
+
 <main *ngIf="userRetrieved" class= "main-content">
     <h1>Mi perfil</h1>
     <img id="profilePic" src="assets/img/user_default_icon.png"/>
-    <button id="setProfilePicButton" class="normal-button">Elegir foto</button>
+    <button id="setProfilePicButton" class="normal-button"><i class="bi bi-camera-fill"></i>Elegir foto</button>
     <form class= "register-form" #userInfo="ngForm" (ngSubmit)="onSubmit(userInfo)">
         <div class="register-form-field">
         <fieldset>
