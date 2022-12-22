@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Product } from 'src/app/model/product.model';
 import { ShoppingCartRow } from 'src/app/model/shoppingCartRow.model';
@@ -13,14 +14,14 @@ import { ProductService } from 'src/app/services/product.service';
 
 export class CheckoutComponent implements OnInit {
 
-  cartStatus: number;
-  private firebaseSubscription: any;
+  firebaseSubscription: any;
   shoppingCart: Map<number , ShoppingCartRow>;
   products: Product[];
 
   constructor(private firebaseService:FirebaseServiceService, 
               private productService:ProductService,
-              private toast: ToastrService) 
+              private toast: ToastrService,
+              private spinner: NgxSpinnerService) 
   { 
     this.firebaseSubscription= this.firebaseService.emitter.subscribe((message)=>{
       this.handleResult(message);
@@ -30,12 +31,8 @@ export class CheckoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.spinner.show();
     this.firebaseService.getUserShoppingCart();
-    this.cartStatus = 0;
-    const confirmButton = document.getElementById('confirmPurchaseButton') as HTMLButtonElement;
-    const emptyButton = document.getElementById('emptyCartButton') as HTMLButtonElement;
-    confirmButton.addEventListener('click', ()=>{ this.confirmPurchase(); })
-    emptyButton.addEventListener('click', ()=>{ this.emptyCart(); })
   }
 
   ngOnDestroy(){
@@ -43,6 +40,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   confirmPurchase(){
+    this.spinner.show();
     let purchaseTotal: number = 0;
     const shoppingCartArray: ShoppingCartRow[] = [];
     for(let [key, row] of this.shoppingCart){
@@ -74,12 +72,16 @@ export class CheckoutComponent implements OnInit {
 
   handleResult(message: string) {
     const code = message.split(';', 3);
+    this.spinner.hide();
     switch(code[0]){
       case '0':
-        const shoppingCartList = JSON.parse(code[1]) as ShoppingCartRow[];
-        shoppingCartList.forEach((shoppingCartRow)=>{
-          this.shoppingCart.set(shoppingCartRow.productId, shoppingCartRow);
-        });
+        if(code[1].length > 0){        
+          const shoppingCartList = JSON.parse(code[1]) as ShoppingCartRow[];
+          shoppingCartList.forEach((shoppingCartRow)=>{
+            this.shoppingCart.set(shoppingCartRow.productId, shoppingCartRow);
+          });
+        }
+        
         console.log(this.shoppingCart);
         break;
       case '1':
@@ -90,6 +92,7 @@ export class CheckoutComponent implements OnInit {
         this.emptyCart()
         //TODO: send a confirmation email to user
         this.toast.success(code[1], 'Éxito!');
+        break;
     }
   }
 }

@@ -109,7 +109,7 @@ export class ProductComponent implements OnInit {
         if(newQuantity <= 10){
           this.firebaseService.updateShoppingCartRowQuantity(newQuantity, this.shoppingCartRowId);
         }else{
-          this.toast.warning('Sólo se puede llevar hasta 10 productos','Aviso');
+          this.toast.warning(`Ya hay ${this.shoppingCartRow.quantity} unidades de este producto en el carrito. Sólo se puede llevar hasta 10 unidades`,'Aviso');
           this.enableInput();
         }
       }

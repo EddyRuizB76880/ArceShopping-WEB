@@ -56,13 +56,21 @@ input{
 }
 
 .cancel-button{
-  background-color: #f03a3d;
+  background-color: #fc284c;
 }
 
 .main-content
 { 
   margin-top: 10vh;
 }
+
+.centered{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 
 
 /* based on angular-toastr css https://github.com/Foxandxss/angular-toastr/blob/cb508fe6801d6b288d3afc525bb40fee1b101650/dist/angular-toastr.css */

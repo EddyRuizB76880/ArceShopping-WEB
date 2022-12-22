@@ -1,17 +1,36 @@
 <app-header></app-header>
-<main class="main-content">
+<main  class="main-content centered">
     <h1>Mi carrito de compras</h1>
 
-    <ul>        <!-- The keyvalue keyword transforms the map to an array of <key, value> that can be iterated on-->
-        <li *ngFor="let shoppingCartItem of shoppingCart | keyvalue">
-            <img src = "{{products[shoppingCartItem.value.productId -1].thumbnail}}"/>
-            <p>{{products[shoppingCartItem.value.productId -1].title}}</p>
-            <input [(ngModel)]="shoppingCartItem.value.quantity" max="10" min="1" type="number" value="{{shoppingCartItem.value.quantity}}"/>
-            <p>{{shoppingCartItem.value.unitPrice * shoppingCartItem.value.quantity}}</p>
-            <button (click)="removeItem(shoppingCartItem.value.productId)">Quitar del carrito</button>
-        </li>
-    </ul>
-
-    <button id= "confirmPurchaseButton">Confirmar mi compra</button>
-    <button id= "emptyCartButton">Vaciar carrito</button>
+    <table *ngIf="shoppingCart.size > 0; else emptyCartSection" title="Los productos incluidos son: ">
+     <!-- The keyvalue keyword transforms the map to an array of <key, value> that can be iterated on-->
+        <tr *ngFor="let shoppingCartItem of shoppingCart | keyvalue">
+            <td>
+                <img src = "{{products[shoppingCartItem.value.productId -1].thumbnail}}"/>
+            </td>
+            
+            <td>
+                <p>{{products[shoppingCartItem.value.productId -1].title}}</p>
+            </td>
+            
+            <td>
+                <input [(ngModel)]="shoppingCartItem.value.quantity" max="10" min="1" type="number" value="{{shoppingCartItem.value.quantity}}"/>
+            </td>
+            
+            <td>
+                <p>${{shoppingCartItem.value.unitPrice * shoppingCartItem.value.quantity}}</p>
+            </td>
+                
+            <td>
+                <button class="delete-button cancel-button" (click)="removeItem(shoppingCartItem.value.productId)"><i class="bi bi-trash-fill"></i></button>
+            </td>
+        </tr>
+    </table>
+    <div *ngIf="shoppingCart.size > 0">
+        <button (click)= "emptyCart()" class= "cancel-button" id= "emptyCartButton">Vaciar carrito</button>
+        <button (click)= "confirmPurchase()" class= "confirm-button" id= "confirmPurchaseButton">Confirmar mi compra</button>
+    </div>
+    <ng-template #emptyCartSection><h2>
+        El carrito se encuentra vacío.
+    </h2></ng-template>
 </main>

@@ -4,6 +4,7 @@ import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr'
 import { FirebaseServiceService } from 'src/app/services/firebase-service.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-register',
@@ -14,11 +15,12 @@ import { FirebaseServiceService } from 'src/app/services/firebase-service.servic
 export class RegisterComponent implements OnInit {
   user: User = new User();
   firebaseSubscription: any;
-  submitButton: HTMLButtonElement;
+
   
   //Through dependency injection, get the services required by the component.
   constructor(private firebaseService:FirebaseServiceService, 
               private router:Router,
+              private spinner: NgxSpinnerService,
               private toast:ToastrService) { }
  
 
@@ -31,9 +33,7 @@ export class RegisterComponent implements OnInit {
     this.firebaseSubscription= this.firebaseService.emitter.subscribe((message)=>{
       this.handleResult(message);
     });
-    //Use DOM to retrieve button element defined on template
-    this.submitButton = document.getElementById('submitButton') as HTMLButtonElement;
-  }
+   }
 
   /*
     Angular's component's lifecycle method.
@@ -49,10 +49,9 @@ export class RegisterComponent implements OnInit {
     When user clicks on 'Submit', this method will be invoked
   */ 
   async onSubmit(newUserForm: NgForm) {
+    this.spinner.show();
     //Check if form is valid according to rules we defined on template
     if(newUserForm.valid){
-      //Disable button to avoid user spamming submit button
-      this.submitButton.disabled = true;
       this.firebaseService.saveNewUser(this.user);    
     }else{
       //No field can be empty
@@ -65,6 +64,7 @@ export class RegisterComponent implements OnInit {
     method.
   */ 
   handleResult(message: string){
+    this.spinner.hide();
     //Every service returns a string in the following format:
     //number[special_character]message
     
@@ -85,8 +85,7 @@ export class RegisterComponent implements OnInit {
       case "1":
         //Something went wrong with the new user's creation
         this.toast.error(code[1],"Error");
-        //Enable submit button again. 
-        this.submitButton.disabled = false;
+        
         break;
       }
   }

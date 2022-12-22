@@ -1,5 +1,4 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Time } from '@angular/common'
 
 import { 
   getStorage, 
@@ -54,11 +53,11 @@ export class FirebaseServiceService {
 
   public async saveNewUser(newUser:User){
     //ToDo: the password "holis" must be changed to a randomly generated string
-    await createUserWithEmailAndPassword(this.auth, newUser.email, "holppoois")
-    .then(()=>{
-      addDoc(collection(this.firestore, this.USER_COLLECTION),
+    await createUserWithEmailAndPassword(this.auth, newUser.email, 'holppoois')
+    .then(async ()=>{
+      await addDoc(collection(this.firestore, this.USER_COLLECTION),
       {name:newUser.name, id:newUser.id, email:newUser.email,
-      age: newUser.age, location:newUser.location, picture:""});
+      age: newUser.age, location:newUser.location, picture:''});
       signOut(this.auth);
       this.sendTemporaryPassword(newUser.email);
     }).catch((error)=>{
@@ -83,41 +82,50 @@ export class FirebaseServiceService {
   }
 
   async login(email:string, password:string){
+    let result: string = '';
     await signInWithEmailAndPassword(this.auth, email, password).then(
     (response)=>{
     if(response.user){
       if(response.user.emailVerified){
-        this.emitter.emit('0: Inicio de sesión exitoso');
+        this.userEmail = this.auth.currentUser?.email as string;
+        result = '0: Inicio de sesión exitoso';
       }else{
-        this.emitter.emit('1: Verifique su correo.');
+        result = '1: Verifique su correo.';
       }
     }
     }).catch((error)=>{
-      console.log(error);
-      this.emitter.emit('2: Credenciales incorrectas');
+      result = '2: Credenciales incorrectas';
     })
+
+    this.emitter.emit(result);
   }
 
   public async logout(){
     await signOut(this.auth);
+    this.userEmail = '';
   }  
 
   public async updateUserDetails(user:User, userDocId:any, newPictureString:string){
+    let result: string = '';
     const userDocReference = doc(this.firestore,this.USER_COLLECTION , userDocId);
     const url = await this.saveImageInStorage(newPictureString);
-    updateDoc(userDocReference,
+    await updateDoc(userDocReference,
       {
         name:user.name, id:user.id, email:user.email,
         age: user.age, location:user.location, picture:url
       }).then(()=>{
-      this.emitter.emit('1;Cambios guardados');
+      result = '1;Cambios guardados';
+    }).catch(()=>{
+      result = '';
     }); 
+    this.emitter.emit(result);
   }
   
   /* 
     This method retrieves user's data and sends it over to component.
   */
   public async getUser(){
+    console.log(this.userEmail)
     let response: string = '';
     //Create a query that will allow us to find the current user's data
     const userQuery = query(collection(this.firestore, this.USER_COLLECTION),
@@ -173,9 +181,9 @@ export class FirebaseServiceService {
       quantity: requestedQuantity,
       unitPrice: product.price,
     }).then(()=>{
-        response = "0;Producto añadido exitosamente";
+        response = '0;Producto añadido exitosamente';
     }).catch((error)=>{
-        response = "1;Ocurrió un error";
+        response = '1;Ocurrió un error';
     });
 
     this.emitter.emit(response);

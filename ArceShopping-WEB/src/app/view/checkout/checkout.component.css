@@ -1,16 +1,19 @@
-ul{
-    display: flex;
-    flex-direction: column;
+table{
+    border-spacing: 1vw;
 }
 
-li{
-    display: flex;
-    flex-direction: row;
+img{
+    border-radius: 50%;
+    height: 10vw;
+    width: 10vw;
+    object-fit: cover;
 }
 
-img
-{
-    width: 10%;
-    height: 10%;
+input{
+    width: 25%;
 }
 
+.delete-button{
+    width: 8vw;
+    height: 6vh;
+}

@@ -1,7 +1,7 @@
 <app-header></app-header>
-<main class= "main-content">
+<main class= "main-content centered">
     <h1>Tu historial de compras</h1>
-    <table>
+    <table *ngIf ="userPurchases.length > 0; else noHistoryBlock">
         <tr>
             <th>
                 Fecha de la compra
@@ -15,7 +15,11 @@
         <tr *ngFor = "let purchase of userPurchases; let forIndex = index">
             <td>{{purchase.purchaseTime | date:'short'}}</td>
             <td>${{purchase.total}}</td>
-            <td><button [routerLink]="['/purchase']" (click)="setPurchase(forIndex)">Ver compra</button></td>
+            <td><button class="normal-button" [routerLink]="['/purchase']" (click)="setPurchase(forIndex)">Ver compra</button></td>
         </tr>
     </table>
+    <ng-template #noHistoryBlock>
+        <h2>El historial se encuentra vacío</h2>
+        <h3>Realiza compras para visualizarlas aquí</h3>
+    </ng-template>
 </main>
