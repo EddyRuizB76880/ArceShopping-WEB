@@ -52,7 +52,7 @@ export class FirebaseServiceService {
   }
 
   public async saveNewUser(newUser:User){
-    //ToDo: the password "holis" must be changed to a randomly generated string
+    //ToDo: the password must be changed to a randomly generated string
     await createUserWithEmailAndPassword(this.auth, newUser.email, 'holppoois')
     .then(async ()=>{
       await addDoc(collection(this.firestore, this.USER_COLLECTION),
