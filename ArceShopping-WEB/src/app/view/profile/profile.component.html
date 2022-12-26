@@ -3,7 +3,7 @@
 <main *ngIf="userRetrieved" class= "main-content centered">
     <h1>Mi perfil</h1>
     <img id="profilePic" src="assets/img/user_default_icon.png"/>
-    <button id="setProfilePicButton" class="normal-button"><i class="bi bi-camera-fill"></i>Elegir foto</button>
+    <button (click)="displayPictureOptions()" id="setProfilePicButton" class="normal-button"><i class="bi bi-camera-fill"></i>Elegir foto</button>
     <form class= "register-form" #userInfo="ngForm" (ngSubmit)="onSubmit(userInfo)">
         <div class="register-form-field">
         <fieldset>
@@ -42,5 +42,5 @@
 
         <button class="confirm-button" id="saveButton" type="submit">Guardar cambios</button>
     </form>
-
+    <button (click)="logout()" class="normal-button" id="logout"><i class="bi bi-box-arrow-left"></i>Cerrar sesión</button>  
 </main>

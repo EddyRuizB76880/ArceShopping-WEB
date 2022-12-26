@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { User } from 'src/app/model/user.model';
@@ -18,12 +19,12 @@ export class ProfileComponent implements OnInit {
   firebaseSubscription: any;
   capacitorSubscription: any;
   profilePicture: HTMLImageElement; 
-  saveButton: HTMLButtonElement;
   userRetrieved: Boolean = false;
 
   constructor(private firebaseService: FirebaseServiceService,
               private spinner: NgxSpinnerService,
               private toast: ToastrService,
+              private router: Router,
               private capacitorService: CapacitorService) 
   { 
     this.firebaseSubscription = this.firebaseService.emitter.subscribe((message)=>{
@@ -48,19 +49,22 @@ export class ProfileComponent implements OnInit {
   }
 
   getHtmlElements(){
-    const setProfilePictureButton = document.getElementById('setProfilePicButton') as HTMLButtonElement;
-    setProfilePictureButton.addEventListener('click',()=>{
-        this.capacitorService.displayPictureOptions();
-    });
-    this.saveButton = document.getElementById('saveButton') as HTMLButtonElement;
     this.profilePicture = document.getElementById('profilePic') as HTMLImageElement;
-
     if(this.user.picture !== ''){
       this.profilePicture.src = this.user.picture;
     }
-
     this.spinner.hide();
   }
+
+  displayPictureOptions(){
+    this.capacitorService.displayPictureOptions();
+  }
+
+  async logout(){
+    await this.firebaseService.logout();
+    this.router.navigateByUrl('',{replaceUrl:true});
+   }
+ 
 
   handleResult(message: string){
     console.log(message)
@@ -81,7 +85,7 @@ export class ProfileComponent implements OnInit {
         //Data update was successful
         this.spinner.hide();
         this.toast.success(code[1], 'Exito');
-        this.saveButton.disabled = false;
+      
         break;
       case '2':
         //Capacitor either took a picture or retrieved an image from gallery
@@ -101,7 +105,6 @@ export class ProfileComponent implements OnInit {
     //ToDO: Find  a way to determine which fields have been modified and only update those
     //with firebase service.
     if(userInfo.valid){
-      this.saveButton.disabled = true;
       this.spinner.show();
       this.firebaseService.updateUserDetails(this.user, this.userDocId, 
                                               this.profilePicture.src);

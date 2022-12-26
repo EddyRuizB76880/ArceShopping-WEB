@@ -9,16 +9,10 @@ import { FirebaseServiceService } from 'src/app/services/firebase-service.servic
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(private firebaseService:FirebaseServiceService,
-              private router: Router) { }
+  constructor() { }
 
   ngOnInit(): void {
   
-  }
-
-  async logout(){
-   await this.firebaseService.logout();
-   this.router.navigateByUrl('',{replaceUrl:true});
   }
 
 

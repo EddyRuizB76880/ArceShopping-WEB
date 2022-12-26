@@ -1,24 +1,23 @@
-<div id="header">
+<header id="header">
     <ul>
         <li>
+            <i class="bi bi-person-circle"></i>
             <a [routerLink]="['/profile']">Mi Perfil</a>
         </li>
-    
-        <li>
+        
+        <li >
+            <i class="bi bi-cart"></i>
             <a [routerLink]="['/checkout']">Ir al carrito</a>
         </li>
     
         <li>
+            <i class="bi bi-receipt"></i>
             <a [routerLink]="['/history']">Mis compras pasadas</a>
         </li>
 
         <li>
+            <i class="bi bi-shop"></i>
             <a [routerLink]="['/home']">Tienda</a>
         </li>
-
-
-        <li>
-            <button (click)="logout()" class="normal-button" id="logout"><i class="bi bi-box-arrow-left"></i>Cerrar sesión</button>
-        </li>
     </ul>
-</div>
+</header>

@@ -10,3 +10,10 @@ fieldset{
     flex-direction: column;
 }
 
+.confirm-button{
+    align-self: center;
+}
+
+#logout{
+    align-self: flex-start;
+}

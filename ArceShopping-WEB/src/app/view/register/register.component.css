@@ -1,6 +1,9 @@
-nav{
-  position:absolute;
-  margin-top: 80vh;
+.cancel-button{
+  align-self: flex-start;
+}
+
+.confirm-button{
+  align-self: center;
 }
 
 /*Styles provided by google: https://angular.io/guide/forms*/
